@@ -1,6 +1,6 @@
 const http = require('http')
 const fs = require('fs')
-const httpPort = 80
+const httpPort = process.env.PORT || 80
 
 http.createServer((req, res) => {
   if (req.url.split('.')[1]==='appcache') {
