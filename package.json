@@ -1,3 +1,16 @@
 {
-    "main": "index.js"
+  "name": "bla",
+  "main": "index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "bacek97"
+  },
+  "author": "bacek97",
+  "license": "CC0-1.0",
+  "description": ""
 }
