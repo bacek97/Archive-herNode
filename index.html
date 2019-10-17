@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<!-- https://codepen.io/bacek97/pen/zQxgjy -->
+<html>
+
+<script>
+  let t0 = performance.now()
+</script>
+
+<head>
+  <title>Loading...</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no, minimal-ui" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve" height="100px" width="100px">
+      <circle cx="50" cy="50" r="40" stroke="white" stroke-width="3" fill="silver" />
+    </svg>' />
+
+  <script src='https://unpkg.com/vuex'></script>
+  <script src='https://unpkg.com/vue/dist/vue.js'></script>
+  <script src='https://unpkg.com/vue-i18n/dist/vue-i18n.js'></script>
+  <script src='https://unpkg.com/vue-router/dist/vue-router.js'></script>
+  <script src="https://unpkg.com/vuetify/dist/vuetify.min.js"></script>
+  <script src="https://unpkg.com/sortablejs@1.10.0-rc3/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuedraggable/dist/vuedraggable.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-grid-layout/dist/vue-grid-layout.umd.min.js"></script>
+  <script src='https://unpkg.com/pako/dist/pako.min.js'></script>
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/vuetify@2.0.0-beta.9/dist/vuetify.min.css" rel="stylesheet">
+
+  <style type="text/css" id='styLessCompiled'></style>
+</head>
+
+<body>
+
+  
+    <div id='vm'>L.o.a.d.i.n.g.</div>
+
+    <style type="text/less">
+    
+    </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js"></script>
+
+<script> 
+  const styLessCompile = ({ id }) => {
+      let e = document.getElementById(id)
+      less.render(e.innerHTML).then(
+        ({ css }) => {
+          document.getElementById('styLessCompiled').innerHTML += css
+          e.remove()
+        },
+        (err) => { console.error(err) }
+      )
+    }
+    const vueCompile = ({ id }) => {
+      return ((e) => {
+        let r = Vue.compile(e.innerHTML).render // TypeError: document.getElementById(...) is null
+        // e.remove() // почему эта строка удаляет из dom раньше исполнения предыдущей?
+        return r
+      })(document.getElementById(id))
+    }
+</script>
+
+
+  <script> const componentLangdd = () =>
+      Promise.resolve({
+        render: Vue.compile(`<b-nav-item-dropdown right id="langdd" :text="$t($i18n.locale)" variant="outline-primary">
+              <b-link v-for="item in data.availableLanguages" :to="{ params: { language: item }, query: $route.query}" :key="item" v-text="$t(item)"></b-link>
+            </b-nav-item-dropdown>`).render,
+        data() {
+          return {};
+        },
+        computed: {
+          ...Vuex.mapState(["data"])
+        },
+        methods: {
+          ...Vuex.mapActions([])
+        }
+      });
+  </script>
+
+<script type="text/x-template" id="templateComponentExample">
+  <div></div>
+</script>
+<script> const componentExample = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentExample").innerHTML).render,
+    //components: { componentExample }, // 'component-x': componentX   // <component-x></component-x>
+    data: () => ({
+      
+    }),
+    computed: {
+    },
+    methods: {
+    }
+  });
+</script>
+
+<script> const vuexMixin = {
+    data: () => ({
+      
+    }),
+    computed: {
+      ...Vuex.mapState(["data", "downloaded"]),
+      ...Vuex.mapGetters([])
+    },
+    methods: {
+      ...Vuex.mapActions([
+        "loadData"
+      ]),
+      ...Vuex.mapMutations(["write2state", "stQueryParse"]),
+    }
+  }
+  Vue.mixin(vuexMixin)
+</script>
+
+
+
+<script type="text/x-template" id="templateComponentVM">
+  <v-app id="inspire">
+    <component-app-bar></component-app-bar>
+    <component-drawer></component-drawer>
+    <v-content>
+      <router-view></router-view>
+    </v-content>
+    <component-z-content></component-z-content>
+    <component-footer></component-footer>
+  </v-app>
+</script>
+
+<script type="text/x-template" id="templateComponentAppBar">
+  <v-app-bar
+      :clipped-left="data.nonStrict.primaryDrawer.clipped"
+      app
+      color="primary"
+      dark
+    >
+      <v-toolbar-title
+        style="width: 300px"
+        class="ml-0 pl-4"
+      >
+        <v-app-bar-nav-icon @click.stop="data.nonStrict.primaryDrawer.model = !data.nonStrict.primaryDrawer.model"></v-app-bar-nav-icon>
+        <span class="hidden-sm-and-down">Google Contacts</span>
+      </v-toolbar-title>
+      <v-text-field
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="search"
+        label="Search"
+        class="hidden-sm-and-down"
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>apps</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>notifications</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        large
+      >
+        <v-avatar
+          size="32px"
+          item
+        >
+          <v-img
+            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+            alt="Vuetify"
+          >
+          </v-img></v-avatar>
+      </v-btn>
+    </v-app-bar>
+</script>
+<script> const componentAppBar = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentAppBar").innerHTML).render,
+    //components: { componentExample }, // 'component-x': componentX   // <component-x></component-x>
+    
+  });
+</script>
+
+<script type="text/x-template" id="templateComponentDrawer">
+  <v-navigation-drawer
+      v-model="data.nonStrict.primaryDrawer.model"
+      :clipped="data.nonStrict.primaryDrawer.clipped"
+      :floating="data.nonStrict.primaryDrawer.floating"
+      :mini-variant="data.nonStrict.primaryDrawer.mini"
+      :permanent="data.nonStrict.primaryDrawer.type === 'permanent'"
+      :temporary="data.nonStrict.primaryDrawer.type === 'temporary'"
+      app
+    >
+      <v-list dense>
+        <template v-for="item in downloaded.items">
+          <v-layout
+            v-if="item.heading"
+            :key="item.heading"
+            align-center
+          >
+            <v-flex xs6>
+              <v-subheader v-if="item.heading">
+                {{ item.heading }}
+              </v-subheader>
+            </v-flex>
+            <v-flex
+              xs6
+              class="text-center"
+            >
+              <a
+                href="#!"
+                class="body-2 black--text"
+              >EDIT</a>
+            </v-flex>
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            :key="item.text"
+            v-model="item.model"
+            :prepend-icon="item.model ? item.icon : item['icon-alt']"
+            append-icon=""
+          >
+            <template v-slot:activator>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.text }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-list-item
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click=""
+            >
+              <v-list-item-action v-if="child.icon">
+                <v-icon>{{ child.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ child.text }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-group>
+          <v-list-item
+            v-else
+            :key="item.text"
+            @click=""
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+    </v-navigation-drawer>
+</script>
+<script> const componentDrawer = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentDrawer").innerHTML).render,
+    //components: { componentExample }, // 'component-x': componentX   // <component-x></component-x>
+  });
+</script>
+
+<script type="text/x-template" id="templateComponentFooter">
+  <v-footer
+      :inset="data.nonStrict.footer.inset"
+      app
+    >
+      <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
+</script>
+<script> const componentFooter = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentFooter").innerHTML).render,
+    //components: { componentExample }, // 'component-x': componentX   // <component-x></component-x>
+    
+  });
+</script>
+
+<script type="text/x-template" id="templateComponentZContent">
+  <v-btn
+    bottom
+    color="pink"
+    dark
+    fab
+    fixed
+    right
+    @click="data.nonStrict.dialog = !data.nonStrict.dialog"
+  >
+    <v-icon>settings</v-icon>
+    <v-dialog
+      v-model="data.nonStrict.dialog"
+      max-width="800px"
+    >
+      <v-card>
+        <v-card-title class="" v-text='$t("settings")' />
+        <v-container grid-list-sm>
+          <v-layout
+            wrap
+          >
+            <v-flex
+              xs12
+              align-center
+              justify-space-between
+            >
+              <v-layout align-center>
+                <v-avatar
+                  size="40px"
+                  class="mr-4"
+                >
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+                <v-text-field
+                  placeholder="Name"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                prepend-icon="business"
+                placeholder="Company"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs6>
+              <v-text-field
+                placeholder="Job title"
+              ></v-text-field>
+            </v-flex>
+            <v-flex
+                    xs4
+                    md4
+                  >
+                    <span>Scheme</span>
+                    <v-switch
+                      v-model="$vuetify.theme.dark"
+                      primary
+                      label="Dark"
+                    ></v-switch>
+                    <span>Drawer</span>
+              <v-radio-group
+                v-model="data.nonStrict.primaryDrawer.type"
+                column
+              >
+                <v-radio
+                  v-for="drawer in data.nonStrict.primaryDrawer.types"
+                  :key="drawer"
+                  :label="drawer"
+                  :value="drawer.toLowerCase()"
+                  primary
+                ></v-radio>
+              </v-radio-group>
+              <v-switch
+                v-model="data.nonStrict.primaryDrawer.clipped"
+                label="Clipped"
+                primary
+              ></v-switch>
+              <v-switch
+                v-model="data.nonStrict.primaryDrawer.floating"
+                label="Floating"
+                primary
+              ></v-switch>
+              <v-switch
+                v-model="data.nonStrict.primaryDrawer.mini"
+                label="Mini"
+                primary
+              ></v-switch>
+              <span>Footer</span>
+              <v-switch
+                v-model="data.nonStrict.footer.inset"
+                label="Inset"
+                primary
+              ></v-switch>
+              </v-flex>
+              <v-flex
+              xs4
+              md4
+            >
+              
+            </v-flex>
+            <v-flex
+              xs4
+              md4
+             >
+              <v-switch v-model="data.nonStrict.cards.flat" label="Flat"></v-switch>
+              <v-switch v-model="data.nonStrict.cards.outlined" label="Outlined"></v-switch>
+              <v-switch v-model="data.nonStrict.cards.raised" label="Raised"></v-switch>
+              <v-switch v-model="data.nonStrict.cards.loading" label="Loading"></v-switch>
+              <v-switch v-model="data.nonStrict.cards.actions" label="With actions"></v-switch>
+              <v-slider v-model="data.nonStrict.cards.elevation" label="Elevation" min="0" max="24"></v-slider>
+              <v-slider v-model="data.nonStrict.cards.width" label="Width" min="0" max="1000"></v-slider>
+              <v-slider v-model="data.nonStrict.cards.height" label="Height" min="0" max="1000"></v-slider>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-card-actions>
+          <v-btn
+            text
+            color="primary"
+          >More</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            @click="data.nonStrict.dialog = false"
+          >Cancel</v-btn>
+          <v-btn
+            text
+            @click="data.nonStrict.dialog = false"
+          >Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-btn>
+</script>
+<script> const componentZContent = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentZContent").innerHTML).render,
+    //components: { componentExample }, // 'component-x': componentX   // <component-x></component-x>
+  });
+</script>
+
+<script type="text/x-template" id="templateComponentUrl">
+  <!-- <v-container
+        fluid
+        fill-height
+      > -->
+        <!-- <v-layout
+          align-center
+          justify-center
+        >
+          <v-draggable v-model="data.myArray" draggable=".item">
+            <div v-for="element in data.myArray" :key="element.id" class="item" v-text="element.name" />
+            <template #header>
+              <button>Add</button>
+              <br />
+              <button>del</button>
+            </template>
+          </v-draggable>
+        </v-layout> -->
+        <grid-layout
+        :layout.sync="data.nonStrict.vueGrid.layout"
+        :col-num="data.nonStrict.vueGrid.colNum"
+        :row-height="data.nonStrict.vueGrid.rowHeight"
+        :is-draggable="data.nonStrict.vueGrid.isDraggable"
+        :is-resizable="data.nonStrict.vueGrid.isResizable"
+        :is-mirrored="data.nonStrict.vueGrid.isMirrored"
+        :vertical-compact="data.nonStrict.vueGrid.verticalCompact"
+        :margin="data.nonStrict.vueGrid.margin"
+        :use-css-transforms="data.nonStrict.vueGrid.useCssTransforms"
+        >
+
+            <grid-item v-for="item in data.nonStrict.vueGrid.layout"
+                      :x="item.x"
+                      :y="item.y"
+                      :w="item.w"
+                      :h="item.h"
+                      :i="item.i">
+                <!-- {{item.i}} -->
+                <v-card
+                  class="mx-auto"
+                  :flat="data.nonStrict.cards.flat"
+                  :loading="data.nonStrict.cards.loading"
+                  :outlined="data.nonStrict.cards.outlined"
+                  :elevation="data.nonStrict.cards.elevation"
+                  :raised="data.nonStrict.cards.raised"
+                  :width="data.nonStrict.cards.width"
+                  :height="data.nonStrict.cards.height"
+                >
+                  <v-card-title>I'm a title {{item.i}}</v-card-title>
+
+                  <v-card-text>I'm card text</v-card-text>
+                  <v-card-actions v-if="actions">
+                    <v-btn icon>
+                      <v-icon>mdi-heart</v-icon>
+                    </v-btn>
+                    <v-btn text>Click</v-btn>
+                    <v-btn outlined>Click</v-btn>
+                  </v-card-actions>
+                </v-card>
+                
+                <div text icon style='position: absolute; top: -1.6rem; left: -1.6rem'>
+                  <v-icon>check_circle</v-icon>
+                </div>
+            </grid-item>
+        </grid-layout>
+      <!-- </v-container> -->
+</script>
+<script> const componentUrl = () =>
+  Promise.resolve({
+    render: Vue.compile(document.querySelector("#templateComponentUrl").innerHTML).render,
+    components: { vDraggable:vuedraggable, GridLayout: VueGridLayout.GridLayout, GridItem: VueGridLayout.GridItem }, // 'component-x': componentX   // <component-x></component-x>
+    data: () => ({
+      
+    }),
+    computed: {
+      ...Vuex.mapState(["data", "downloaded"]),
+      ...Vuex.mapGetters([])
+    },
+    methods: {
+    }
+  });
+</script>
+
+
+
+
+  <script>
+// {
+    const fallbackLocale = "ru";
+    const userLocale = (window.navigator ? (window.navigator.language ||
+                        window.navigator.systemLanguage ||
+                        window.navigator.userLanguage) : "ru")
+                        .substr(0, 2).toLowerCase();
+    const redirect = `/${userLocale}/url`;
+
+    const createApp = () => { 
+      const createI18n = () => new VueI18n({ fallbackLocale })
+      const createStore = () => { return new Vuex.Store({
+        state: () => ({
+          route: {},
+          downloaded: {
+            items: [
+              { icon: 'contacts', text: 'Contacts' },
+              { icon: 'history', text: 'Frequently contacted' },
+              { icon: 'content_copy', text: 'Duplicates' },
+              {
+                icon: 'keyboard_arrow_up',
+                'icon-alt': 'keyboard_arrow_down',
+                text: 'Labels',
+                model: true,
+                children: [
+                  { icon: 'add', text: 'Create label' },
+                ],
+              },
+              {
+                icon: 'keyboard_arrow_up',
+                'icon-alt': 'keyboard_arrow_down',
+                text: 'More',
+                model: false,
+                children: [
+                  { text: 'Import' },
+                  { text: 'Export' },
+                  { text: 'Print' },
+                  { text: 'Undo changes' },
+                  { text: 'Other contacts' },
+                ],
+              },
+              { icon: 'settings', text: 'Settings' },
+              { icon: 'chat_bubble', text: 'Send feedback' },
+              { icon: 'help', text: 'Help' },
+              { icon: 'phonelink', text: 'App downloads' },
+              { icon: 'keyboard', text: 'Go to the old version' },
+            ],
+          },
+          data: {
+            availableLanguages: ["ru", "en"],
+            
+            nonStrict: {
+              cards: {
+                flat: false,
+                // media: true,
+                loading: false,
+                actions: true,
+                outlined: false,
+                elevation: undefined,
+                raised: false,
+                width: 344,
+                height: undefined,
+              },
+              vueGrid: {
+                colNum:3,
+                rowHeight:30,
+                isDraggable:true,
+                isResizable:true,
+                isMirrored:false,
+                margin:[10, 10],
+                verticalCompact:true,
+                useCssTransforms:true,
+                layout: [
+                {x:0,y:0,w:1,h:4,i:0},
+                {x:1,y:0,w:1,h:4,i:1},
+                {x:2,y:0,w:1,h:4,i:2},
+                {x:0,y:4,w:1,h:4,i:3},
+                {x:1,y:4,w:1,h:4,i:4},
+                {x:2,y:4,w:1,h:4,i:5},
+                // {"x":0,"y":5,"w":2,"h":5,"i":"6"},
+                // {"x":2,"y":5,"w":2,"h":5,"i":"7"},
+                // {"x":4,"y":5,"w":2,"h":5,"i":"8"},
+                // {"x":6,"y":3,"w":2,"h":4,"i":"9"},
+                // {"x":8,"y":4,"w":2,"h":4,"i":"10"},
+                // {"x":10,"y":4,"w":2,"h":4,"i":"11"},
+                // {"x":0,"y":10,"w":2,"h":5,"i":"12"},
+                // {"x":2,"y":10,"w":2,"h":5,"i":"13"},
+                // {"x":4,"y":8,"w":2,"h":4,"i":"14"},
+                // {"x":6,"y":8,"w":2,"h":4,"i":"15"},
+                // {"x":8,"y":10,"w":2,"h":5,"i":"16"},
+                // {"x":10,"y":4,"w":2,"h":2,"i":"17"},
+                // {"x":0,"y":9,"w":2,"h":3,"i":"18"},
+                // {"x":2,"y":6,"w":2,"h":2,"i":"19"}
+                ],
+              },
+              myArray: [
+                {id:1,name:'one'},
+                {id:2,name:'two'}
+              ],
+              dialog: false,
+              primaryDrawer: {
+                types: ['Default (no property)', 'Permanent', 'Temporary'],
+                type: 'default (no property)',
+                model: null,
+                clipped: true,
+                floating: false,
+                mini: false,
+              },
+              footer: {
+                inset: false,
+              },
+            }
+          }
+        }),
+        getters: {
+        },
+        mutations: {
+          stQueryParse(state, payload) {
+            Vue.set(state, "route", payload);
+          },
+          
+          write2state(state, { to, data }) {
+            Vue.set(state, to, data);
+          },
+          
+          startLoading(state, p) {
+            if (state.downloaded.loading[p] === undefined) {
+              Vue.set(state.downloaded.loading, p, 0);
+            }
+            Vue.set(
+              state.downloaded.loading,
+              p,
+              state.downloaded.loading[p] + 1
+            );
+          },
+          finishLoading(state, payload) {
+            Vue.set(
+              state.downloaded.loading,
+              payload,
+              state.downloaded.loading[payload] - 1
+            );
+          },
+          updateData(state, { to, data }) {
+            Vue.set(state.downloaded, to, data);
+          },
+          
+        },
+        actions: {
+          
+          async loadData({ commit }, payload) {
+            commit("startLoading", payload.i || 0);
+            try {
+              (await Promise.all(payload.urls.map(axios.get))).forEach(
+                ({ data }, index) => {
+                  commit(payload.mut || "updateData", {
+                    to: payload.to[index],
+                    data,
+                    payload
+                  });
+                }
+              );
+            } catch (error) {
+              console.error(error);
+            } finally {
+              commit("finishLoading", payload.i || 0);
+            }
+          },
+
+
+        }
+      }) }
+      const createRouter = () => { return new VueRouter({
+        // mode: "history", // commented if simple.html
+        routes: [
+          // { path: '/foo', component: { template: '#component1', components: { 'component-x': componentX } } },
+          { path: "/", redirect }, //HTML5_History - CodePen.io/debug
+          {
+            path: "/:language",
+            component: componentUrl,
+            children: [
+              { path: "", redirect },
+              { path: "url", name: "url", component: componentUrl },
+              // { path: 'tv/:show', name: 'TV', component: movies },
+              { path: "*", component: { template: "<div>404</div>" } }
+            ],
+            beforeEnter: (to, from, next) => {
+              next();
+            }
+          }
+        ],
+        scrollBehavior (to, from, savedPosition) {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve({ x: 0, y: 0 })
+            }, 500)
+          })
+        }
+      }) }
+      const createVuetify= () => { return new Vuetify({
+        icons: {
+          // The default iconfont of `mdi` requires a build process
+          // Here we opt to use Google's Material Icon font library
+          iconfont: 'mdi'
+        },
+        theme: {
+          options: {
+            customProperties: true,
+            cspNonce: 'dQw4w9WgXcQ'
+          },
+          dark: true,
+          // themes: {
+          //   light: {
+          //     primary: '#1976D2',
+          //     secondary: '#424242',
+          //     accent: '#82B1FF',
+          //     error: '#FF5252',
+          //     info: '#2196F3',
+          //     success: '#4CAF50',
+          //     warning: '#FFC107'
+          //   },
+          //   dark: {
+          //     primary: "#004D40",
+          //     error: "#B71C1C",
+          //     info: "#0D47A1",
+          //     accent: "#004D40",
+          //     secondary: "#424242",
+          //     success: "#1B5E20",
+          //     warning: "#EF6C00"
+          //   }
+          // }
+        }
+      })
+      }
+      const i18n = createI18n()
+      const store = createStore()
+      const router = createRouter()
+      const vuetify = createVuetify()
+      const createVm = (context) => { return new Vue({ i18n, store, router, vuetify,
+      components: { componentAppBar, componentDrawer, componentZContent, componentFooter },  // 'component-x': componentX   // <component-x></component-x>
+      mounted() {
+            console.warn((performance.now() - t0) + 'MountedVM')
+          },
+      created() {
+          console.warn((performance.now() - t0) + 'createdVM')
+          document.title = "Google Contacts";
+
+          this.$router.beforeResolve((to, from, next) => {
+            console.warn((performance.now() - t0) + 'beforeResolve')
+            // const lang1 = to.params.language
+              this.loadLanguageAsync(to.params.language, fallbackLocale)
+                .then(()=>next())
+                .catch((err) => {
+                   if (err.message === '404') 
+                    { 
+                      console.warn(`${this.$t("lang404")} : ${lang1}`), 
+                      next(redirect)
+                    } })
+          });
+          
+          this.$router.onReady(() => {
+            this.$mount('#vm');
+          })
+          // this.$router.push(redirect) // исправить
+        },
+        methods: {
+          async loadLanguageAsync(...langs) {
+            
+            const setI18nLanguage = (lang4) => {
+              console.log(`Применяется локаль ${lang4}`)
+              i18n.locale = lang4
+              // axios.defaults.headers.common['Accept-Language'] = lang
+              document.querySelector('html').setAttribute('lang', lang4)
+              return lang4
+            }
+
+            const resolveLangObj = (lang3) => {
+              const messages = {
+                en: {
+                  lang404: 'not found lang',
+                  loadedLangs: 'Loaded langs',
+                  settings: 'Settings'
+                },
+                ru: {
+                  lang404: 'нет такого языка',
+                  loadedLangs: 'загружены языки',
+                  settings: 'Настройки'
+                }
+              }
+              return messages[lang3];
+            };
+
+            langs.forEach((lang2, indexLangs) => {
+              if (!(this.$i18n.locale === lang2)) {
+                console.log(`${lang2} локаль не текущая`)
+                if (this.data.availableLanguages.includes(lang2)) {
+                  console.log(`${lang2} локаль доступная`)
+                  if (!this.$i18n.messages[lang2]) {
+                    console.log(`${lang2} локаль еще не загруженая`)
+                    this.$i18n.setLocaleMessage(lang2, resolveLangObj(lang2));
+                    if (indexLangs === 0) { setI18nLanguage(lang2) }
+                    else console.log(`${lang2} не первая в списке локаль`)
+                    
+                    console.log(`${this.$t("loadedLangs")}: ${Object.keys(this.$i18n.messages)}`);
+                  }
+                  else console.log(`${lang2} локаль уже загружена`)
+                }
+                else {
+                  console.log(`${lang2} локаль пока несуществует!!`)
+                  // throw new Error('404')
+                  return 404
+                }
+              }
+              else console.log(`${lang2} локаль уже используется`)
+            })
+
+          }
+        },
+        data: () => ({
+        }),
+        template: '#templateComponentVM' // ComponentsRouter (beforeRouteUpdate)
+      })
+            }
+            const vm = createVm()
+            return { i18n, store, router, vm }
+          }
+          // if (typeof window !== "undefined") { 
+          const { i18n, store, router, vm } = createApp()
+    // }
+    
+// }
+      // console.log(performance.now() - t0)
+  </script>
+
+  
+</body>
+
+</html>
