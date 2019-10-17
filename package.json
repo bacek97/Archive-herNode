@@ -6,9 +6,8 @@
     "start": "node index.js",
     "test": "exit 0"
   },
-  "repository": {
-    "type": "git",
-    "url": "bacek97"
+  "engines": {
+    "node": "10.x"
   },
   "author": "bacek97",
   "license": "CC0-1.0",
